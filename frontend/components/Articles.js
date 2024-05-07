@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Navigate } from 'react-router-dom'
+
 import PT from 'prop-types'
 
 export default function Articles(props) {
@@ -10,7 +10,15 @@ export default function Articles(props) {
 
   useEffect(() => {
     // ✨ grab the articles here, on first render only
-  })
+    props.getArticles()
+  }, [])
+
+  const editArticleHandle = (article) => {
+    props.setCurrentArticleId(article);
+
+  }
+
+
 
   return (
     // ✨ fix the JSX: replace `Function.prototype` with actual functions
@@ -18,19 +26,19 @@ export default function Articles(props) {
     <div className="articles">
       <h2>Articles</h2>
       {
-        ![].length
+        !props?.articles.length
           ? 'No articles yet'
-          : [].map(art => {
+          : props?.articles.map((art, id) => {
             return (
-              <div className="article" key={art.article_id}>
+              <div className="article" key={id}>
                 <div>
                   <h3>{art.title}</h3>
                   <p>{art.text}</p>
                   <p>Topic: {art.topic}</p>
                 </div>
                 <div>
-                  <button disabled={true} onClick={Function.prototype}>Edit</button>
-                  <button disabled={true} onClick={Function.prototype}>Delete</button>
+                  <button  onClick={() => editArticleHandle(art)}>Edit</button>
+                  <button onClick={() => props.deleteArticle(art.article_id)}>Delete</button>
                 </div>
               </div>
             )
@@ -53,3 +61,4 @@ Articles.propTypes = {
   setCurrentArticleId: PT.func.isRequired,
   currentArticleId: PT.number, // can be undefined or null
 }
+

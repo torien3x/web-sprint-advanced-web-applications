@@ -12,7 +12,16 @@ export default function ArticleForm(props) {
     // Every time the `currentArticle` prop changes, we should check it for truthiness:
     // if it's truthy, we should set its title, text and topic into the corresponding
     // values of the form. If it's not, we should reset the form back to initial values.
-  })
+    if (props.currentArticleId) {
+      setValues({
+        title: props.currentArticleId.title,
+        text: props.currentArticleId.text,
+        topic: props.currentArticleId.topic,
+      });
+    } else {
+      setValues(initialFormValues);
+    }
+  }, [props.currentArticleId]);
 
   const onChange = evt => {
     const { id, value } = evt.target
@@ -24,12 +33,21 @@ export default function ArticleForm(props) {
     // ✨ implement
     // We must submit a new post or update an existing one,
     // depending on the truthyness of the `currentArticle` prop.
+    if (props.currentArticleId && props.currentArticleId.article_id) {
+      props.updateArticle({article_id: props.currentArticleId.article_id, article: {...values}})
+    } else {
+      props.postArticle({...values})
+    }
+    setValues(initialFormValues);
+    // props.getArticles()  
   }
 
   const isDisabled = () => {
     // ✨ implement
     // Make sure the inputs have some values
+    return !values.title || !values.text || !values.topic;
   }
+
 
   return (
     // ✨ fix the JSX: make the heading display either "Edit" or "Create"
@@ -76,3 +94,4 @@ ArticleForm.propTypes = {
     topic: PT.string.isRequired,
   })
 }
+
